@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+{% block title %}Image Detail{% endblock %}
+
+{% block style %}
+<style>
+    .container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px;
+        margin: 0; /* Remove left and right margin */
+    }
+
+    .details {
+        flex: 0 0 30%; /* Takes up 30% of the width */
+    }
+
+    .similar-images {
+        flex: 0 0 70%; /* Takes up 70% of the width */
+    }
+
+    .image-detail-container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative; /* To position icons */
+    }
+
+    .image-detail-container img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .image-detail-container img:hover {
+        transform: scale(1.3); /* Zoom in on hover */
+    }
+
+    .actions {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .actions button {
+        margin: 0 10px;
+        padding: 10px;
+        border: none;
+        background: none;
+        font-size: 24px; /* Larger icons */
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .actions button:hover {
+        transform: scale(1.2);
+    }
+
+    .btn-primary, .btn-secondary, .btn-danger {
+        background-color: transparent; /* Make button background transparent */
+        color: #333; /* Color for icons */
+    }
+
+    .btn-primary {
+        color: #007bff; /* Thumbs up color */
+    }
+
+    .btn-secondary {
+        color: #6c757d; /* Thumbs down color */
+    }
+
+    .btn-danger {
+        color: #dc3545; /* Delete icon color */
+    }
+
+    .admin-icons {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .admin-icons a {
+        font-size: 24px;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+
+    .admin-icons a:hover {
+        color: #007bff; /* Change color on hover */
+    }
+
+    .comment-form {
+        margin: 20px 0;
+    }
+
+    .comments-list {
+        margin-top: 20px;
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .comments-list li {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .custom-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .custom-image-container {
+        position: relative;
+        width: 100%;
+        max-width: 300px; /* Adjust size as needed */
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .custom-image-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .custom-image-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .sorting-buttons {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .sorting-buttons button {
+        margin: 0 10px;
+        padding: 10px 20px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .sorting-buttons button:hover {
+        background-color: #0056b3;
+    }
+    .image-hover-container {
+    position: relative;
+}
+
+.image-properties {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.image-hover-container:hover .image-properties {
+    display: flex; /* Display properties on hover */
+}
+.custom-image-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px; /* Adjust size as needed */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-image-container:hover {
+    transform: translateY(-5px);
+}
+
+.image-hover-container {
+    position: relative;
+}
+
+.image-properties {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.image-hover-container:hover .image-properties {
+    display: flex; /* Display properties on hover */
+}
+
+.download-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+    background-color: #218838;
+}
+
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<div class="sorting-buttons" style="margin-top: 150px;">
+    <a href="?sort=type"><button>Sort by Type</button></a>
+    <a href="?sort=color"><button>Sort by Color</button></a>
+    <a href="?sort=size"><button>Sort by Size</button></a>
+    <a href="?sort=orientation"><button>Sort by Orientation</button></a>
+</div>
+
+<div class="container">
+    <!-- Details Section -->
+    <div class="details">
+        <div class="image-detail-container">
+            <div class="admin-icons">
+                {% if user.is_authenticated and user == image.author %}
+                <a href="{% url 'edit_image' image.pk %}" title="Edit">
+                    <i class="fas fa-pen"></i>
+                </a>
+                <form method="POST" action="{% url 'delete_image' image.pk %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" title="Delete">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            <h1>{{ image.title }}</h1>
+            <div class="image-hover-container">
+                <img src="{{ image.image.url }}" alt="{{ image.title }}">
+                <div class="image-properties">
+                    <p><strong>Type:</strong> {{ image_properties.type }}</p>
+                    <p><strong>Orientation:</strong> {{ image_properties.orientation }}</p>
+                    <p><strong>Width:</strong> {{ image_properties.width }} px</p>
+                    <p><strong>Height:</strong> {{ image_properties.height }} px</p>
+                    <p><strong>Color Mode:</strong> {{ image_properties.mode }}</p>
+                    <p><strong>Size:</strong> {{ image_properties.size|filesizeformat }}</p>
+                </div>
+            </div>
+            <a href="{{ image.image.url }}" download class="download-button">Download Image</a>
+            <p><strong>Description:</strong> {{ image.description }}</p>
+            <p><strong>Uploaded at:</strong> {{ image.uploaded_at }}</p>
+            <p><strong>Author:</strong> {{ image.author.username }}</p>
+            <div class="actions">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    {% if not user_like and not user_dislike %}
+                    <button type="submit" name="like" class="btn btn-primary" title="Like">
+                        <i class="fas fa-thumbs-up"></i> {{ total_likes }}
+                    </button>
+                    <button type="submit" name="dislike" class="btn btn-secondary" title="Dislike">
+                        <i class="fas fa-thumbs-down"></i> {{ total_dislikes }}
+                    </button>
+                    {% elif user_like %}
+                    <button type="submit" name="dislike" class="btn btn-secondary" title="Dislike">
+                        <i class="fas fa-thumbs-down"></i> {{ total_dislikes }}
+                    </button>
+                    {% elif user_dislike %}
+                    <button type="submit" name="like" class="btn btn-primary" title="Like">
+                        <i class="fas fa-thumbs-up"></i> {{ total_likes }}
+                    </button>
+                    {% endif %}
+                </form>
+            </div>
+
+            {% if user.is_authenticated %}
+            <h2>Add a Comment</h2>
+            <form method="POST" action="" class="comment-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" name="comment" class="btn btn-primary">Add Comment</button>
+            </form>
+            {% endif %}
+
+            <h2>Comments</h2>
+            <ul class="comments-list">
+                {% for comment in comments %}
+                <li><strong>{{ comment.user.username }}:</strong> {{ comment.text }} <small>({{ comment.created_at }})</small></li>
+                {% empty %}
+                <li>No comments yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Similar Images Section -->
+    <div class="similar-images">
+        <h2 style="text-align: center;">Similar Images</h2>
+        <div class="custom-gallery">
+            {% for prop in similar_image_properties %}
+            <a href="{% url 'image_detail' prop.image.pk %}" class="custom-image-container">
+                <div class="image-hover-container">
+                    <img src="{{ prop.image.image.url }}" alt="{{ prop.image.title }}">
+                    <div class="image-properties">
+                        <p><strong>Type:</strong> {{ prop.type }}</p>
+                        <p><strong>Orientation:</strong> {{ prop.orientation }}</p>
+                        <p><strong>Width:</strong> {{ prop.width }} px</p>
+                        <p><strong>Height:</strong> {{ prop.height }} px</p>
+                        <p><strong>Color Mode:</strong> {{ prop.mode }}</p>
+                        <p><strong>Size:</strong> {{ prop.size|filesizeformat }}</p>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <p>No similar images found.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

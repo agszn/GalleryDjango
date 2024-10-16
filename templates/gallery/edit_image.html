@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block style %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 100px auto; /* Center the form and add top margin */
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+
+    .form-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-container form input[type="text"],
+    .form-container form input[type="file"],
+    .form-container form textarea,
+    .form-container form select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .form-container form button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #5cb85c;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        align-self: center;
+    }
+
+    .form-container form button:hover {
+        background-color: #4cae4c;
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Edit Image</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleField = document.querySelector('select[name="title"]');
+        const newTitleField = document.querySelector('input[name="new_title"]').closest('p');
+        
+        function toggleNewTitleField() {
+            if (titleField.value === '') {
+                newTitleField.classList.remove('hidden');
+            } else {
+                newTitleField.classList.add('hidden');
+            }
+        }
+
+        titleField.addEventListener('change', toggleNewTitleField);
+        toggleNewTitleField();  // Initial check on page load
+    });
+</script>
+{% endblock %}

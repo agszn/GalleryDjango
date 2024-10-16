@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block style %}
+<style>
+    /* General Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    /* Gallery Styles */
+    .custom-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+
+    .custom-image-container {
+        position: relative;
+        width: calc(33.333% - 20px); /* 3 images per row for better spacing */
+        border-radius: 10px;
+        overflow: hidden;
+        /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
+        cursor: pointer;
+        /* background-color: #fff; */
+    }
+
+    .custom-image-container:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .custom-image-container img {
+        width: 100%;
+        height: 90%;
+        display: block;
+    }
+
+    /* Image Properties Styles */
+    .custom-image-properties {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 20px;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+        text-align: left;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        font-size: 14px;
+    }
+
+    .custom-image-container:hover .custom-image-properties {
+        display: block;
+        opacity: 1;
+    }
+
+    .custom-image-properties p {
+        margin: 8px 0;
+        font-size: 14px;
+    }
+
+    /* Search Form Styles */
+    .custom-search-form {
+        text-align: center;
+        margin: 40px 0;
+    }
+
+    .custom-search-form input[type="text"] {
+        padding: 12px;
+        width: 300px;
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    .custom-search-form input[type="text"]:focus {
+        border-color: #5cb85c;
+    }
+
+    .custom-search-form button {
+        padding: 12px 20px;
+        border: none;
+        background-color: #5cb85c;
+        color: white;
+        font-size: 16px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-left: 10px;
+    }
+
+    .custom-search-form button:hover {
+        background-color: #4cae4c;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .custom-image-container {
+            width: calc(50% - 20px); /* 2 images per row on tablet screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .custom-image-container {
+            width: 100%; /* 1 image per row on mobile screens */
+        }
+
+        .custom-image-properties {
+            font-size: 12px;
+            padding: 15px;
+        }
+
+        .custom-search-form input[type="text"] {
+            width: 100%;
+        }
+
+        .custom-search-form button {
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center; margin-top: 100px; font-size: 2.5em;">Image Gallery</h1>
+<div class="custom-search-form">
+    <form method="GET" action="">
+        <input type="text" name="q" placeholder="Search images" aria-label="Search images">
+        <button type="submit">Search</button>
+    </form>
+</div>
+<div class="custom-gallery">
+    {% for image in images %}
+    <a href="{% url 'image_detail' image.pk %}" class="custom-image-container" aria-label="View details for {{ image.title }}">
+        <img src="{{ image.image.url }}" alt="{{ image.title }}">
+        <div class="custom-image-properties">
+            <p><strong>Title:</strong> {{ image.title }}</p>
+            <p><strong>Description:</strong> {{ image.description }}</p>
+            <p><strong>Uploaded at:</strong> {{ image.uploaded_at }}</p>
+            <p><strong>Width:</strong> {{ image.properties.width }} px</p>
+            <p><strong>Height:</strong> {{ image.properties.height }} px</p>
+            <p><strong>Format:</strong> {{ image.properties.format }}</p>
+            <p><strong>Mode:</strong> {{ image.properties.mode }}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

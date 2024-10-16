@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block style %}
+<style>
+    .upload-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+
+    .upload-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .upload-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .upload-container form input[type="text"],
+    .upload-container form input[type="file"],
+    .upload-container form textarea,
+    .upload-container form select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .upload-container form button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #5cb85c;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        align-self: center;
+    }
+
+    .upload-container form button:hover {
+        background-color: #4cae4c;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<div class="upload-container" style="text-align: center; margin-top: 150px;">
+    <h1>Upload New Image</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleField = document.querySelector('select[name="title"]');
+        const newTitleField = document.querySelector('input[name="new_title"]').closest('p');
+        
+        function toggleNewTitleField() {
+            if (titleField.value === '') {
+                newTitleField.classList.remove('hidden');
+            } else {
+                newTitleField.classList.add('hidden');
+            }
+        }
+
+        titleField.addEventListener('change', toggleNewTitleField);
+        toggleNewTitleField();  // Initial check on page load
+    });
+</script>
+{% endblock %}
